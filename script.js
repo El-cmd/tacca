@@ -3,22 +3,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = document.getElementById('submitBtn');
     const resultContainer = document.getElementById('result');
     const versoCard = document.getElementById('verso-card');
+    const rectoCard = document.getElementById('recto-card');
     const versoImage = document.getElementById('verso-image');
     const card = document.querySelector('.card');
     const holoCard = document.querySelector('.holo-card');
     const cardFaces = document.querySelectorAll('.card-face');
     
+    // Initialisation des styles des cartes
+    if (rectoCard) {
+        rectoCard.style.display = 'none'; // Cacher la carte recto par défaut
+    }
+    if (versoCard) {
+        versoCard.style.display = 'block'; // Afficher la carte verso par défaut
+    }
+    
     // Variables pour les effets holographiques
     let holoShineAngle = 0;
     
-    // Appliquer les masques pour les effets holographiques
+    // Récupération des éléments d'image
     const rectoImage = document.getElementById('recto-image');
     
     // Configuration des masques pour les effets holographiques
     if (rectoImage) {
         rectoImage.onload = function() {
             const rectoUrl = rectoImage.src;
-            const rectoEffects = document.querySelectorAll('.card-face.card-front .holo-effect, .card-face.card-front .sparkle-effect');
+            const rectoEffects = document.querySelectorAll('#recto-card .holo-overlay, #recto-card .sparkle-overlay');
             rectoEffects.forEach(effect => {
                 effect.style.webkitMaskImage = `url('${rectoUrl}')`;
                 effect.style.maskImage = `url('${rectoUrl}')`;
@@ -44,33 +53,104 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleSubmit() {
         const text = userInput.value.trim();
         
+        // Vérification que rectoCard existe
+        if (!rectoCard) {
+            console.error("L'élément #recto-card n'a pas été trouvé dans le DOM");
+            return;
+        }
+        
         if (text) {
             // Afficher le texte saisi dans le conteneur de résultat
-            resultContainer.textContent = `Card name: ${text}`;
+            resultContainer.textContent = `Nom de la carte : ${text}`;
             
-            // Retourner la carte avec une animation
-            card.classList.toggle('flipped');
-            console.log('Retournement de carte déclenché');
+            // Basculer entre les cartes recto et verso
+            if (versoCard.style.display !== 'none') {
+                // Basculer vers la carte recto
+                versoCard.style.display = 'none';
+                rectoCard.style.display = 'block';
+                console.log('Affichage de la carte recto');
+                
+                // Activer les effets holographiques sur la carte recto
+                setTimeout(() => {
+                    handleRectoHoloEffect = function(e) {
+                        if (!rectoCard) return;
+                        
+                        // Calcul de la position relative de la souris par rapport à la carte
+                        const rect = rectoCard.getBoundingClientRect();
+                        const centerX = rect.left + rect.width / 2;
+                        const centerY = rect.top + rect.height / 2;
+                        const mouseX = e.clientX;
+                        const mouseY = e.clientY;
+                        
+                        // Calcul de l'angle et de la distance par rapport au centre
+                        const deltaX = mouseX - centerX;
+                        const deltaY = mouseY - centerY;
+                        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                        const maxDistance = Math.max(rect.width, rect.height) / 2;
+                        const normalizedDistance = Math.min(distance / maxDistance, 1);
+                        
+                        // Calcul de l'angle pour l'effet de brillance
+                        const holoShineAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+                        
+                        // Application de l'angle aux effets holographiques
+                        document.querySelectorAll('#recto-card .holo-overlay, #recto-card .sparkle-overlay').forEach(effect => {
+                            effect.style.setProperty('--holo-shine-degree', `${holoShineAngle}deg`);
+                        });
+                        
+                        // Effet de rotation 3D en fonction de la position de la souris
+                        const xRatio = (mouseX - rect.left) / rect.width;
+                        const yRatio = (mouseY - rect.top) / rect.height;
+                        const rotateY = 20 * (xRatio - 0.5);
+                        const rotateX = -20 * (yRatio - 0.5);
+                        
+                        // Effet de lévitation avec translation
+                        const translateZ = 25;
+                        
+                        // Appliquer tous les effets de transformation
+                        rectoCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${translateZ}px)`;
+                        
+                        // Ajustement de l'intensité de l'effet en fonction de la distance
+                        const opacity = 0.4 + normalizedDistance * 0.3;
+                        
+                        // Appliquer l'opacité aux effets
+                        document.querySelectorAll('#recto-card .holo-overlay, #recto-card .sparkle-overlay').forEach(effect => {
+                            effect.style.opacity = opacity.toString();
+                        });
+                    };
+                    
+                    rectoCard.addEventListener('mousemove', handleRectoHoloEffect);
+                    rectoCard.addEventListener('mouseenter', () => {
+                        rectoCard.classList.add('active');
+                    });
+                    rectoCard.addEventListener('mouseleave', () => {
+                        rectoCard.classList.remove('active');
+                        rectoCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+                        
+                        // Réinitialiser l'opacité des effets
+                        document.querySelectorAll('#recto-card .holo-overlay, #recto-card .sparkle-overlay').forEach(effect => {
+                            effect.style.opacity = '0.2';
+                        });
+                    });
+                }, 100);
+                
+            } else {
+                // Revenir à la carte verso
+                rectoCard.style.display = 'none';
+                versoCard.style.display = 'block';
+                console.log('Retour à la carte verso');
+            }
             
-            // Forcer un reflow pour s'assurer que l'animation fonctionne correctement
+            // Animer la carte actuellement visible
+            const activeCard = versoCard.style.display !== 'none' ? versoCard : rectoCard;
+            activeCard.classList.add('activate');
             setTimeout(() => {
-                if (card.classList.contains('flipped')) {
-                    console.log('La carte est maintenant côté recto');
-                } else {
-                    console.log('La carte est maintenant côté verso');
-                }
-            }, 50);
-            
-            // Animer la carte verso
-            versoCard.classList.add('activate');
-            setTimeout(() => {
-                versoCard.classList.remove('activate');
+                activeCard.classList.remove('activate');
             }, 1000);
             
             // Effacer le champ d'entrée
             userInput.value = '';
         } else {
-            resultContainer.textContent = 'Please enter a card name before sending.';
+            resultContainer.textContent = 'Veuillez entrer un nom de carte avant d\'envoyer.';
         }
         
         // Redonner le focus au champ d'entrée
