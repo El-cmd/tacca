@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes Holographiques TACCA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1c1c1c;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px;
+            perspective: 1000px;
+        }
+
+        /* Base card styles */
+        .card {
+            position: relative;
+            width: 400px; /* Carte plus large */
+            height: 560px; /* Carte plus haute */
+            border-radius: 14px;
+            transition: transform 0.6s ease-out;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            overflow: visible; /* Permettre le débordement */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            z-index: 1;
+            background: transparent;
+            margin: 20px; /* Espace entre les cartes */
+        }
+
+        /* V Star effect (recto2.png) */
+        .card.v-star {
+            --color1: #e0f7fa;
+            --color2: #80deea;
+            --color3: #26c6da;
+            --color4: #00acc1;
+            --color5: #1a73e8;
+            --shine-angle: 15deg;
+        }
+
+        /* Secret rare effect (carteverso.png) */
+        .card.secret-rare {
+            --color1: #fafafa;
+            --color2: #f5f5f5;
+            --color3: #e0e0e0;
+            --color4: #bdbdbd;
+            --color5: #9e9e9e;
+            --shine-angle: 15deg;
+        }
+
+        /* Base card image */
+        .card-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 1;
+            /* Pas de masque pour voir la carte entière */
+            /* Les effets seront masqués séparément */
+        }
+
+        /* Holo effects */
+        .holo-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            z-index: 2;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            background-image: linear-gradient(
+                var(--shine-angle),
+                transparent,
+                var(--color1),
+                var(--color2), 
+                var(--color3),
+                var(--color4),
+                var(--color5),
+                transparent
+            );
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            filter: brightness(1.2) contrast(1.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover .holo-effect {
+            opacity: 0.6;
+            animation: holo-shine 3s ease-in-out infinite alternate;
+        }
+
+        /* Sparkle effect */
+        .sparkle-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            opacity: 0;
+            transition: opacity 0.3s;
+            background-image: 
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 1%),
+                radial-gradient(circle at 20% 35%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 1%),
+                radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 0.5%),
+                radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 1%),
+                radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 1%),
+                radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 1%),
+                radial-gradient(circle at 10% 60%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 1%),
+                radial-gradient(circle at 60% 35%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 1%);
+            background-size: 150% 150%;
+        }
+
+        .card:hover .sparkle-effect {
+            opacity: 0.4;
+            animation: sparkle 5s ease-in-out infinite;
+        }
+
+        /* Cosmos pattern */
+        .cosmos-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            mix-blend-mode: screen;
+            opacity: 0;
+            transition: opacity 0.3s;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 0.5%),
+                radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 0.3%),
+                radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 0.3%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 0.3%),
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 0.3%);
+            background-position: center center;
+            background-size: 120% 120%;
+        }
+
+        .card:hover .cosmos-effect {
+            opacity: 0.4;
+            animation: cosmos 8s linear infinite;
+        }
+
+        /* Rainbow overlay */
+        .rainbow-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            pointer-events: none;
+            mix-blend-mode: soft-light;
+            opacity: 0;
+            transition: opacity 0.3s;
+            background: linear-gradient(
+                45deg, 
+                rgba(255, 0, 0, 0.2), 
+                rgba(255, 165, 0, 0.2), 
+                rgba(255, 255, 0, 0.2), 
+                rgba(0, 128, 0, 0.2), 
+                rgba(0, 0, 255, 0.2), 
+                rgba(75, 0, 130, 0.2), 
+                rgba(238, 130, 238, 0.2)
+            );
+            filter: saturate(1.5) brightness(1.2);
+        }
+
+        .card:hover .rainbow-effect {
+            opacity: 0.15;
+            animation: rainbow 6s linear infinite;
+        }
+
+        /* Animations */
+        @keyframes holo-shine {
+            0% {
+                background-position: 0% 0%;
+                filter: brightness(1.1) contrast(1.05);
+            }
+            50% {
+                background-position: 100% 100%;
+                filter: brightness(1.3) contrast(1.1);
+            }
+            100% {
+                background-position: 0% 0%;
+                filter: brightness(1.1) contrast(1.05);
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                background-position: 0% 0%;
+            }
+            25% {
+                background-position: 100% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            75% {
+                background-position: 0% 100%;
+            }
+        }
+
+        @keyframes cosmos {
+            0% {
+                background-position: 0% 0%;
+                filter: hue-rotate(0deg);
+            }
+            25% {
+                background-position: 100% 0%;
+                filter: hue-rotate(90deg);
+            }
+            50% {
+                background-position: 100% 100%;
+                filter: hue-rotate(180deg);
+            }
+            75% {
+                background-position: 0% 100%;
+                filter: hue-rotate(270deg);
+            }
+            100% {
+                background-position: 0% 0%;
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        @keyframes rainbow {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="cards-container">
+        <!-- Carte Recto avec effet V Star -->
+        <div class="card v-star" id="recto-card">
+            <img src="assets/recto2test.svg" alt="Carte Recto" class="card-image" id="recto-image">
+            <div class="holo-effect" style="opacity: 0.4;"></div>
+            <div class="sparkle-effect" style="opacity: 0.2;"></div>
+            <div class="rainbow-effect" style="opacity: 0.1;"></div>
+        </div>
+
+        <!-- Carte Verso avec effet Secret Rare -->
+        <div class="card secret-rare" id="verso-card">
+            <img src="assets/carteverso.png" alt="Carte Verso" class="card-image" id="verso-image">
+            <div class="holo-effect" style="opacity: 0.4;"></div>
+            <div class="cosmos-effect" style="opacity: 0.2;"></div>
+            <div class="sparkle-effect" style="opacity: 0.2;"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            
+            // Appliquer les masques pour les effets afin de respecter la transparence
+            const rectoImage = document.getElementById('recto-image');
+            const versoImage = document.getElementById('verso-image');
+            const rectoCard = document.getElementById('recto-card');
+            const versoCard = document.getElementById('verso-card');
+            
+            // Attendre que les images soient chargées
+            rectoImage.onload = function() {
+                // Masquer seulement les effets pour montrer toute la carte
+                const rectoEffects = rectoCard.querySelectorAll('.holo-effect, .sparkle-effect, .rainbow-effect');
+                // Appliquer une position qui montre toute la carte
+                rectoImage.style.objectFit = 'contain';
+                rectoImage.style.width = '100%';
+                rectoImage.style.height = '100%';
+                // Ajuster les effets pour qu'ils suivent la carte
+                rectoEffects.forEach(effect => {
+                    effect.style.width = '100%';
+                    effect.style.height = '100%';
+                    effect.style.objectFit = 'contain';
+                });
+            };
+            
+            versoImage.onload = function() {
+                // Masquer seulement les effets pour montrer toute la carte
+                const versoEffects = versoCard.querySelectorAll('.holo-effect, .cosmos-effect, .sparkle-effect');
+                // Appliquer une position qui montre toute la carte
+                versoImage.style.objectFit = 'contain';
+                versoImage.style.width = '100%';
+                versoImage.style.height = '100%';
+                // Ajuster les effets pour qu'ils suivent la carte
+                versoEffects.forEach(effect => {
+                    effect.style.width = '100%';
+                    effect.style.height = '100%';
+                    effect.style.objectFit = 'contain';
+                });
+            };
+            
+            cards.forEach(card => {
+                // Gestion du mouvement de la souris pour l'effet holographique
+                card.addEventListener('mousemove', (e) => {
+                    // Calcul de la position relative de la souris par rapport à la carte
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left; // Position X dans la carte
+                    const y = e.clientY - rect.top;  // Position Y dans la carte
+                    
+                    // Calcul des ratios de position (0-1)
+                    const xRatio = x / rect.width;
+                    const yRatio = y / rect.height;
+                    
+                    // Angle de brillance basé sur la position de la souris
+                    const shineAngle = Math.atan2(y - (rect.height / 2), x - (rect.width / 2)) * (180 / Math.PI);
+                    
+                    // Application de l'angle à l'effet holographique
+                    card.style.setProperty('--shine-angle', `${shineAngle}deg`);
+                    
+                    // Effet 3D de rotation
+                    const rotateY = 20 * (xRatio - 0.5);
+                    const rotateX = -20 * (yRatio - 0.5);
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                    
+                    // Ajustement de la position de l'effet basé sur le mouvement
+                    const holoEffect = card.querySelector('.holo-effect');
+                    if (holoEffect) {
+                        holoEffect.style.backgroundPosition = `${xRatio * 200}% ${yRatio * 200}%`;
+                    }
+                });
+                
+                // Réinitialiser la position quand la souris quitte la carte
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+                });
+                
+                // Animation automatique pour montrer l'effet même sans interaction
+                card.addEventListener('mouseenter', () => {
+                    card.querySelectorAll('.holo-effect, .sparkle-effect, .cosmos-effect, .rainbow-effect').forEach(effect => {
+                        effect.style.opacity = '1';
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
