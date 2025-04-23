@@ -165,12 +165,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Effet de rotation 3D en fonction de la position de la souris
-        const rotateX = -(deltaY / rect.height * 6); // Rotation douce
-        const rotateY = (deltaX / rect.width * 6);    // Rotation douce
-        versoCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        const xRatio = (mouseX - rect.left) / rect.width;
+        const yRatio = (mouseY - rect.top) / rect.height;
+        const rotateY = 20 * (xRatio - 0.5); // Amplification de l'effet de rotation horizontale
+        const rotateX = -20 * (yRatio - 0.5); // Amplification de l'effet de rotation verticale
+        
+        // Effet de lévitation avec translation
+        const translateZ = 25; // Légère élévation de la carte
+        
+        // Appliquer tous les effets de transformation
+        versoCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${translateZ}px)`;
 
         // Ajustement de l'intensité de l'effet en fonction de la distance
-        const opacity = 0.4 + normalizedDistance * 0.3; // Effet subtil
+        const opacity = 0.4 + normalizedDistance * 0.3; 
         
         // Appliquer l'opacité aux effets
         document.querySelectorAll('#verso-card .holo-overlay, #verso-card .cosmos-effect, #verso-card .sparkle-effect').forEach(effect => {
