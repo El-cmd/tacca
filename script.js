@@ -63,12 +63,26 @@ document.addEventListener('DOMContentLoaded', () => {
             // Afficher le texte saisi dans le conteneur de résultat
             resultContainer.textContent = `Nom de la carte : ${text}`;
             
-            // Basculer entre les cartes recto et verso
+            // Simuler l'animation de retournement
             if (versoCard.style.display !== 'none') {
-                // Basculer vers la carte recto
-                versoCard.style.display = 'none';
-                rectoCard.style.display = 'block';
-                console.log('Affichage de la carte recto');
+                // Animer la carte verso avec l'effet de sortie
+                versoCard.classList.add('flip-out');
+                
+                // Attendre que l'animation de sortie soit terminée avant de changer l'image
+                setTimeout(() => {
+                    // Cacher la carte verso et afficher la carte recto
+                    versoCard.style.display = 'none';
+                    rectoCard.style.display = 'block';
+                    
+                    // Ajouter l'animation d'entrée sur la carte recto
+                    rectoCard.classList.add('flip-in');
+                    console.log('Affichage de la carte recto');
+                    
+                    // Supprimer la classe d'animation après qu'elle soit terminée
+                    setTimeout(() => {
+                        rectoCard.classList.remove('flip-in');
+                    }, 600);
+                }, 600);
                 
                 // Activer les effets holographiques sur la carte recto
                 setTimeout(() => {
@@ -134,10 +148,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 100);
                 
             } else {
-                // Revenir à la carte verso
-                rectoCard.style.display = 'none';
-                versoCard.style.display = 'block';
-                console.log('Retour à la carte verso');
+                // Animer la carte recto avec l'effet de sortie
+                rectoCard.classList.add('flip-out');
+                
+                // Attendre que l'animation de sortie soit terminée avant de changer l'image
+                setTimeout(() => {
+                    // Cacher la carte recto et afficher la carte verso
+                    rectoCard.style.display = 'none';
+                    versoCard.style.display = 'block';
+                    
+                    // Ajouter l'animation d'entrée sur la carte verso
+                    versoCard.classList.add('flip-in');
+                    console.log('Retour à la carte verso');
+                    
+                    // Supprimer la classe d'animation après qu'elle soit terminée
+                    setTimeout(() => {
+                        versoCard.classList.remove('flip-in');
+                    }, 600);
+                }, 600);
             }
             
             // Animer la carte actuellement visible
