@@ -397,8 +397,55 @@ button:hover::before {
     background: transparent;
 }
 
+/* Conteneur pour l'image d'arrière-plan */
+.card-background-container {
+    position: absolute;
+    top: 6.5%; /* Position pour correspondre au cadre supérieur */
+    left: 10.5%;
+    width: 79%; /* Ajusté pour correspondre à la largeur du cadre supérieur */
+    height: 50%; /* Hauteur ajustée pour ne couvrir que la partie supérieure */
+    border-radius: 10px;
+    z-index: 1; /* En dessous de l'image de la carte */
+    overflow: hidden;
+}
+
+/* Image d'arrière-plan */
+.card-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Couvre toute la zone */
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 1; /* Pleine opacité */
+}
+
+/* Conteneur pour le nom de la carte */
+.card-name-container {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 3; /* Au-dessus de l'image mais sous les effets holographiques */
+}
+
+/* Style du nom de la carte */
+.card-name {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #b17419; /* Couleur dorée */
+    text-shadow: 0 0 5px #000, 0 0 5px #632, 1px 1px 1px #000; /* Ombre pour meilleure lisibilité */
+    letter-spacing: 1px;
+    margin: 0;
+    padding: 0;
+    transform: translateY(-50%);
+}
+
 /* Container de l'image */
 .card-image-container {
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;

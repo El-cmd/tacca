@@ -1,6 +1,70 @@
+// Exemple de données JSON (à remplacer par un fetch réel plus tard)
+const exampleCardData = {
+  "id": "d9fed5cd-6da8-4a65-b5cc-8a7fe6252579",
+  "name": "Confused Imp",
+  "manaCost": 1,
+  "attack": 1,
+  "health": 2,
+  "type": "dark",
+  "subtype": "None",
+  "rarity": "Common",
+  "description": "An imp with no idea where he is... or why.",
+  "flavorText": "",
+  "createdAt": "2025-04-25T09:39:27.200Z",
+  "userId": "anonymous",
+  "imageUrl": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QuqsmHA0HxVOA0zGYCY47dot/user-lh81xnMjRtHKWy8nEkMpDsod/img-2dtOn1av9SGxQtbHr45dUFYQ.png?st=2025-04-25T08%3A59%3A59Z&se=2025-04-25T10%3A59%3A59Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-25T08%3A09%3A51Z&ske=2025-04-26T08%3A09%3A51Z&sks=b&skv=2024-08-04&sig=t6jjRGVjdWCO9wHSD2i1dMP8lD58jAzekPeD9H0OpsA%3D"
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Définition des fonctions de gestion des effets holographiques au niveau global
     window.handleRectoHoloEffect = null; // Sera défini plus tard
+    
+    // Fonction pour charger l'image d'arrière-plan et le nom depuis les données JSON
+    function loadBackgroundImage(cardData) {
+        if (!cardData || !cardData.imageUrl) {
+            console.error("Pas d'URL d'image disponible dans les données de la carte");
+            return;
+        }
+        
+        // Gestion de l'image d'arrière-plan
+        const backgroundContainer = document.getElementById('card-background-container');
+        if (!backgroundContainer) {
+            console.error("Conteneur d'arrière-plan non trouvé");
+            return;
+        }
+        
+        // Créer l'élément image
+        const backgroundImage = document.createElement('img');
+        backgroundImage.className = 'card-background-image';
+        backgroundImage.src = cardData.imageUrl;
+        backgroundImage.alt = 'Card Background';
+        
+        // Vider le conteneur et ajouter la nouvelle image
+        backgroundContainer.innerHTML = '';
+        backgroundContainer.appendChild(backgroundImage);
+        
+        // Gestion du nom de la carte
+        const nameContainer = document.getElementById('card-name-container');
+        if (!nameContainer) {
+            console.error("Conteneur de nom non trouvé");
+            return;
+        }
+        
+        // Créer l'élément pour le nom
+        const nameElement = document.createElement('h2');
+        nameElement.className = 'card-name';
+        nameElement.textContent = cardData.name || 'Sans nom';
+        
+        // Vider le conteneur et ajouter le nom
+        nameContainer.innerHTML = '';
+        nameContainer.appendChild(nameElement);
+        
+        console.log("Image d'arrière-plan et nom chargés depuis les données: ", cardData.name);
+    }
+    
+    // Charger l'image d'arrière-plan depuis les données d'exemple
+    // Ceci sera remplacé par la récupération des données réelles via fetch
+    loadBackgroundImage(exampleCardData);
     
     const userInput = document.getElementById('userInput');
     const submitBtn = document.getElementById('submitBtn');
@@ -75,6 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("L'élément #recto-card n'a pas été trouvé dans le DOM");
             return;
         }
+        
+        // S'assurer que l'image d'arrière-plan est chargée
+        loadBackgroundImage(exampleCardData);
         
         if (text) {
             // Afficher le texte saisi dans le conteneur de résultat
