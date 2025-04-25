@@ -20,12 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Variables pour les effets holographiques
     let holoShineAngle = 0;
     
-    // Récupération des éléments d'image
-    const rectoImage = document.getElementById('recto-image');
-    
     // Configuration des masques pour les effets holographiques
-    if (rectoImage) {
-        rectoImage.onload = function() {
+    // Utilisation d'un timeout pour s'assurer que les éléments sont chargés
+    setTimeout(() => {
+        const rectoImage = document.getElementById('recto-image');
+        if (rectoImage) {
+            // Gestion des effets holographiques pour l'image recto
             const rectoUrl = rectoImage.src;
             const rectoEffects = document.querySelectorAll('#recto-card .holo-overlay, #recto-card .sparkle-overlay');
             rectoEffects.forEach(effect => {
@@ -33,11 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 effect.style.maskImage = `url('${rectoUrl}')`;
                 effect.style.opacity = '0.5'; // Rendre visible par défaut
             });
-        };
-    }
+            console.log('Effets appliqués sur la carte recto');
+        } else {
+            console.warn("L'élément recto-image n'a pas été trouvé");
+        }
+    }, 300);
     
-    if (versoImage) {
-        versoImage.onload = function() {
+    // Configuration des masques pour l'image verso
+    setTimeout(() => {
+        const versoImage = document.getElementById('verso-image');
+        if (versoImage) {
             const versoUrl = versoImage.src;
             const versoEffects = document.querySelectorAll('#verso-card .holo-overlay, #verso-card .cosmos-effect, #verso-card .sparkle-effect');
             versoEffects.forEach(effect => {
@@ -46,8 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 effect.style.maskImage = `url('${versoUrl}')`;
                 effect.style.opacity = '0.5'; // Rendre visible par défaut
             });
-        };
-    }
+            console.log('Effets appliqués sur la carte verso');
+        } else {
+            console.warn("L'élément verso-image n'a pas été trouvé");
+        }
+    }, 300);
 
     // Fonction pour gérer la soumission du texte et le retournement de la carte
     function handleSubmit() {
