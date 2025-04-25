@@ -12,7 +12,7 @@ const exampleCardData = {
   "flavorText": "",
   "createdAt": "2025-04-25T09:39:27.200Z",
   "userId": "anonymous",
-  "imageUrl": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QuqsmHA0HxVOA0zGYCY47dot/user-lh81xnMjRtHKWy8nEkMpDsod/img-YOu5GG5oUeao7Wo8kBOZsCUF.png?st=2025-04-25T10%3A03%3A34Z&se=2025-04-25T12%3A03%3A34Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-24T21%3A47%3A44Z&ske=2025-04-25T21%3A47%3A44Z&sks=b&skv=2024-08-04&sig=YeXxFO51nwHVBDTeiUWcRm2cmlDLbYbRYHWjjFWwleo%3D"
+  "imageUrl": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QuqsmHA0HxVOA0zGYCY47dot/user-lh81xnMjRtHKWy8nEkMpDsod/img-fqY0alHvY31ZopbfOS5Gw8Zv.png?st=2025-04-25T21%3A11%3A49Z&se=2025-04-25T23%3A11%3A49Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-25T11%3A15%3A38Z&ske=2025-04-26T11%3A15%3A38Z&sks=b&skv=2024-08-04&sig=jV8yo63BydVlHrQ4vac5w8Fs75KZtSyg%2Bk5pV5HYYic%3D"
 };
 
 document.addEventListener('DOMContentLoaded', () => {
