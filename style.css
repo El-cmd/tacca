@@ -439,8 +439,43 @@ button:hover::before {
     text-shadow: 0 0 5px #000, 0 0 5px #632, 1px 1px 1px #000; /* Ombre pour meilleure lisibilité */
     letter-spacing: 1px;
     margin: 0;
+    -webkit-text-stroke: 0.3px black;
     padding: 0;
     transform: translateY(-50%);
+}
+
+/* Style pour l'attaque */
+.card-attack {
+    position: absolute;
+    top: 5.7%;
+    left: 10.5%;
+    width: 30px;
+    height: 30px;
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    /*text-shadow: 0 0 10px #000, 0 0 10px #000; */
+    -webkit-text-stroke: 1px black; /* Bordure noire pour les navigateurs webkit */
+    z-index: 3;
+    text-align: center;
+}
+
+/* Style pour la santé */
+.card-health {
+    position: absolute;
+    top: 5.7%;
+    right: 11.8%;
+    width: 30px;
+    height: 30px;
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    /*text-shadow: 0 0 10px #000, 0 0 10px #000; */
+    -webkit-text-stroke: 1px black; /* Bordure noire pour les navigateurs webkit */
+    z-index: 3;
+    text-align: center;
 }
 
 /* Container de l'image */

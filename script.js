@@ -12,7 +12,7 @@ const exampleCardData = {
   "flavorText": "",
   "createdAt": "2025-04-25T09:39:27.200Z",
   "userId": "anonymous",
-  "imageUrl": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QuqsmHA0HxVOA0zGYCY47dot/user-lh81xnMjRtHKWy8nEkMpDsod/img-2dtOn1av9SGxQtbHr45dUFYQ.png?st=2025-04-25T08%3A59%3A59Z&se=2025-04-25T10%3A59%3A59Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-25T08%3A09%3A51Z&ske=2025-04-26T08%3A09%3A51Z&sks=b&skv=2024-08-04&sig=t6jjRGVjdWCO9wHSD2i1dMP8lD58jAzekPeD9H0OpsA%3D"
+  "imageUrl": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QuqsmHA0HxVOA0zGYCY47dot/user-lh81xnMjRtHKWy8nEkMpDsod/img-YOu5GG5oUeao7Wo8kBOZsCUF.png?st=2025-04-25T10%3A03%3A34Z&se=2025-04-25T12%3A03%3A34Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-24T21%3A47%3A44Z&ske=2025-04-25T21%3A47%3A44Z&sks=b&skv=2024-08-04&sig=YeXxFO51nwHVBDTeiUWcRm2cmlDLbYbRYHWjjFWwleo%3D"
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -59,7 +59,19 @@ document.addEventListener('DOMContentLoaded', () => {
         nameContainer.innerHTML = '';
         nameContainer.appendChild(nameElement);
         
-        console.log("Image d'arrière-plan et nom chargés depuis les données: ", cardData.name);
+        // Afficher l'attaque
+        const attackElement = document.getElementById('card-attack');
+        if (attackElement && cardData.attack !== undefined) {
+            attackElement.textContent = cardData.attack;
+        }
+        
+        // Afficher la santé
+        const healthElement = document.getElementById('card-health');
+        if (healthElement && cardData.health !== undefined) {
+            healthElement.textContent = cardData.health;
+        }
+        
+        console.log("Image d'arrière-plan, nom et statistiques chargés depuis les données: ", cardData.name);
     }
     
     // Charger l'image d'arrière-plan depuis les données d'exemple
@@ -81,6 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (versoCard) {
         versoCard.style.display = 'block'; // Afficher la carte verso par défaut
     }
+    
+    // Charger immédiatement les données pour que les statistiques soient déjà prêtes
+    // même si la carte est cachée
+    loadBackgroundImage(exampleCardData);
     
     // Variables pour les effets holographiques
     let holoShineAngle = 0;
