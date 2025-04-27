@@ -1,26 +1,9 @@
-// Exemple de données JSON (à remplacer par un fetch réel plus tard)
-const exampleCardData = {
-  "id": "d9fed5cd-6da8-4a65-b5cc-8a7fe6252579",
-  "name": "Confused Imp",
-  "manaCost": 1,
-  "subManaCost": "None",
-  "attack": 1,
-  "health": 2,
-  "class": "Imp",
-  "type": "Dark",
-  "subtype": "None",
-  "status": "None",
-  "effects": "You can draw a card.",
-  "rarity": "Common",
-  "description": "An imp with no idea where he is... or why.",
-  "createdAt": "2025-04-25T09:39:27.200Z",
-  "userId": "anonymous",
-  "imageUrl": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QuqsmHA0HxVOA0zGYCY47dot/user-lh81xnMjRtHKWy8nEkMpDsod/img-M9QTIKByXsrZqnOhKMNgS5cj.png?st=2025-04-25T21%3A33%3A05Z&se=2025-04-25T23%3A33%3A05Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-25T04%3A25%3A45Z&ske=2025-04-26T04%3A25%3A45Z&sks=b&skv=2024-08-04&sig=73rjDqHwng6LptNjVd2eUSueK/7r2wMIHqVF%2Btxk7Kk%3D"
-};
+// Variable globale pour stocker les données de la carte obtenues via fetch
+let currentCardData = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Définition des fonctions de gestion des effets holographiques au niveau global
-    window.handleRectoHoloEffect = null; // Sera défini plus tard
+    window.handleRectoHoloEffect = null;
     
     // Fonction pour charger l'image d'arrière-plan et le nom depuis les données JSON
     function loadBackgroundImage(cardData) {
@@ -86,12 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
             descriptionContainer.textContent = cardData.description;
         }
         
-        console.log("Image d'arrière-plan, nom, statistiques et description chargés depuis les données: ", cardData.name);
+
     }
     
-    // Charger l'image d'arrière-plan depuis les données d'exemple
-    // Ceci sera remplacé par la récupération des données réelles via fetch
-    loadBackgroundImage(exampleCardData);
+    // Les données seront chargées uniquement après la requête fetch
+    // Aucun chargement initial n'est effectué
     
     const userInput = document.getElementById('userInput');
     const submitBtn = document.getElementById('submitBtn');
@@ -99,9 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const versoCard = document.getElementById('verso-card');
     const rectoCard = document.getElementById('recto-card');
     const versoImage = document.getElementById('verso-image');
-    // Variables non utilisées supprimées
-    
-    // Initialisation des styles des cartes
+        // Initialisation des styles des cartes
     if (rectoCard) {
         rectoCard.style.display = 'none'; // Cacher la carte recto par défaut
     }
@@ -109,60 +89,86 @@ document.addEventListener('DOMContentLoaded', () => {
         versoCard.style.display = 'block'; // Afficher la carte verso par défaut
     }
     
-    // Charger immédiatement les données pour que les statistiques soient déjà prêtes
-    // même si la carte est cachée
-    loadBackgroundImage(exampleCardData);
-    
     // Variables pour les effets holographiques
     let holoShineAngle = 0;
     
     // Configuration des masques pour les effets holographiques
-    // Utilisation d'un timeout pour s'assurer que les éléments sont chargés
     setTimeout(() => {
+        // Configuration pour la carte recto
         const rectoImage = document.getElementById('recto-image');
         if (rectoImage) {
-            // Gestion des effets holographiques pour l'image recto
-            // Utiliser une silhouette de carte simple au lieu de l'image elle-même comme masque
-            // pour éviter que des reflets multiples apparaissent
-            
-            // On applique des effets sans masque ou avec un masque personnalisé
             const rectoEffects = document.querySelectorAll('#recto-card .holo-overlay, #recto-card .sparkle-overlay');
             rectoEffects.forEach(effect => {
-                // Suppression du masque qui causait les reflets multiples
                 effect.style.webkitMaskImage = 'none';
                 effect.style.maskImage = 'none';
-                
-                // Utiliser une forme simple via clip-path au lieu du masque
                 effect.style.clipPath = 'inset(0% 0% 0% 0% round 16px)';
-                
-                effect.style.opacity = '0.5'; // Rendre visible par défaut
+                effect.style.opacity = '0.5';
             });
-            console.log('Effets appliqués sur la carte recto sans masque pour éviter les reflets multiples');
-        } else {
-            console.warn("L'élément recto-image n'a pas été trouvé");
         }
-    }, 300);
-    
-    // Configuration des masques pour l'image verso
-    setTimeout(() => {
+        
+        // Configuration pour la carte verso
         const versoImage = document.getElementById('verso-image');
         if (versoImage) {
-            const versoUrl = versoImage.src;
             const versoEffects = document.querySelectorAll('#verso-card .holo-overlay, #verso-card .cosmos-effect, #verso-card .sparkle-effect');
             versoEffects.forEach(effect => {
-                // Appliquer le masque pour l'effet holographique
-                effect.style.webkitMaskImage = `url('${versoUrl}')`;
-                effect.style.maskImage = `url('${versoUrl}')`;
-                effect.style.opacity = '0.5'; // Rendre visible par défaut
+                effect.style.opacity = '0.5';
             });
-            console.log('Effets appliqués sur la carte verso');
-        } else {
-            console.warn("L'élément verso-image n'a pas été trouvé");
         }
-    }, 300);
+    }, 200);
+
+    // Fonction pour envoyer une requête POST à l'API et récupérer les données de la carte
+    async function fetchCardData(cardName) {
+        try {
+            // URL de l'API
+            const apiUrl = 'https://n8n-jrc4.onrender.com/webhook/api/chatcard';
+            
+            // Préparation des données pour la requête POST
+            const requestData = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cardName: cardName })
+            };
+            
+            // Affichage d'un message de chargement
+            resultContainer.textContent = 'Génération de la carte en cours...';
+            
+            // Envoi de la requête
+            const response = await fetch(apiUrl, requestData);
+            
+            // Vérification que la réponse est OK
+            if (!response.ok) {
+                throw new Error(`Erreur lors de la requête: ${response.status}`);
+            }
+            
+            // Conversion de la réponse en JSON
+            const rawData = await response.json();
+            
+            // Extraire les données de la carte de la structure de réponse
+            // La réponse est un tableau contenant un objet avec une propriété 'cardData'
+            let cardData = null;
+            if (Array.isArray(rawData) && rawData.length > 0 && rawData[0].cardData) {
+                cardData = rawData[0].cardData;
+            }
+            
+            // Affichage des données brutes dans la console
+            console.log('Données reçues de l\'API (JSON brut):', JSON.stringify(rawData, null, 2));
+            console.log('Données structurées complètes:', rawData);
+            console.log('Données de la carte extraites:', cardData);
+            
+            // Retourne les données de la carte extraites
+            return cardData;
+            
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données:', error);
+            resultContainer.textContent = `Erreur: ${error.message}`;
+            return null;
+        }
+    }
 
     // Fonction pour gérer la soumission du texte et le retournement de la carte
-    function handleSubmit() {
+    async function handleSubmit() {
         const text = userInput.value.trim();
         
         // Vérification que rectoCard existe
@@ -171,12 +177,43 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // S'assurer que l'image d'arrière-plan est chargée
-        loadBackgroundImage(exampleCardData);
-        
         if (text) {
-            // Afficher le texte saisi dans le conteneur de résultat
-            resultContainer.textContent = `Nom de la carte : ${text}`;
+            // Récupération des données de la carte depuis l'API
+            const cardData = await fetchCardData(text);
+            
+            // Si nous avons reçu des données valides
+            if (cardData) {
+                // Afficher le JSON complet dans la console
+                console.log('JSON complet de la carte:', JSON.stringify(cardData, null, 2));
+                
+                // Débogage: vérifier si toutes les propriétés nécessaires sont présentes
+                console.log('Vérification des données:', {
+                    'imageUrl existe': !!cardData.imageUrl,
+                    'nom': cardData.name,
+                    'attaque': cardData.attack,
+                    'santé': cardData.health,
+                });
+                
+                // Stocker les données de la carte globalement
+                currentCardData = cardData;
+                
+                // Charger les données dans la carte
+                loadBackgroundImage(cardData);
+                
+                // Afficher un message de succès avec les détails
+                resultContainer.textContent = `Carte générée : ${cardData.name || text} (${cardData.type || 'Type inconnu'})`;
+                
+                // Afficher plus de détails dans la console pour débogage
+                console.log('Carte générée avec succès:', {
+                    nom: cardData.name,
+                    type: cardData.type,
+                    classe: cardData.class,
+                    attaque: cardData.attack,
+                    santé: cardData.health,
+                    effets: cardData.effects,
+                    rareté: cardData.rarity
+                });
+            }
             
             // Simuler l'animation de retournement
             if (versoCard.style.display !== 'none') {
@@ -191,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Ajouter l'animation d'entrée sur la carte recto
                     rectoCard.classList.add('flip-in');
-                    console.log('Affichage de la carte recto');
                     
                     // Supprimer la classe d'animation après qu'elle soit terminée
                     setTimeout(() => {
@@ -203,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     // S'assurer que rectoCard est disponible
                     if (rectoCard) {
-                        console.log('Configuration des effets holographiques pour la carte recto');
+
                         
                         // Appliquer un effet sans masque pour éviter les reflets multiples
                         const rectoImage = document.getElementById('recto-image');
@@ -273,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         rectoCard.addEventListener('mouseenter', () => {
                             rectoCard.classList.add('active');
-                            console.log('Carte recto active - effets holographiques activés');
+
                         });
                         
                         rectoCard.addEventListener('mouseleave', () => {
@@ -281,17 +317,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             rectoCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
                             
                             // Réinitialiser l'opacité des effets
-                            document.querySelectorAll('#recto-cmard .holo-overlay, #recto-card .sparkle-overlay').forEach(effect => {
+                            document.querySelectorAll('#recto-card .holo-overlay, #recto-card .sparkle-overlay').forEach(effect => {
                                 effect.style.opacity = '0.2';
                             });
-                            console.log('Carte recto inactive - effets holographiques désactivés');
+
                         });
                     } else {
                         console.error("La carte recto n'a pas été trouvée lors de la configuration des effets holographiques");
                     }
                 }, 100);
                 
-            } else {
+            } else {e
                 // Animer la carte recto avec l'effet de sortie
                 rectoCard.classList.add('flip-out');
                 
@@ -303,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Ajouter l'animation d'entrée sur la carte verso
                     versoCard.classList.add('flip-in');
-                    console.log('Retour à la carte verso');
+
                     
                     // Supprimer la classe d'animation après qu'elle soit terminée
                     setTimeout(() => {
@@ -312,12 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 600);
             }
             
-            // Animer la carte actuellement visible
-            const activeCard = versoCard.style.display !== 'none' ? versoCard : rectoCard;
-            activeCard.classList.add('activate');
-            setTimeout(() => {
-                activeCard.classList.remove('activate');
-            }, 1000);
+
             
             // Effacer le champ d'entrée
             userInput.value = '';
@@ -329,9 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userInput.focus();
     }
     
-    // Les fonctions flipCard et handleHoloEffect ont été supprimées car elles ne sont plus utilisées
-
-    // Fonction pour gérer les effets holographiques lors du mouvement de la souris sur la carte verso
+        // Fonction pour gérer les effets holographiques lors du mouvement de la souris sur la carte verso
     function handleVersoHoloEffect(e) {
         if (!versoCard) return;
 
@@ -378,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // La fonction resetHoloEffect a été supprimée car elle n'est plus utilisée
+
 
     // Réinitialiser la transformation quand la souris quitte la carte verso
     function resetVersoHoloEffect() {
@@ -402,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Suppression des écouteurs d'événements qui utilisent des fonctions supprimées
+    
 
     // Gestion des effets holographiques avec le mouvement de la souris sur la carte verso
     document.addEventListener('mousemove', (e) => {
@@ -436,13 +465,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Animation initiale pour montrer l'effet
-        setTimeout(() => {
-            versoCard.classList.add('activate');
-            setTimeout(() => {
-                versoCard.classList.remove('activate');
-            }, 1500);
-        }, 800);
     }
 
     // Focus initial sur le champ d'entrée

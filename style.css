@@ -665,7 +665,7 @@ button:hover::before {
         letter-spacing: 0.5px;
     }
     .card-name-container {
-        top: 12%;
+        top: 10%;
     }
 }
 
