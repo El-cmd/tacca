@@ -552,6 +552,86 @@ button:hover::before {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
+/* Styles pour le bouton Discord */
+.discord-container {
+    margin-top: -40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.discord-button {
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(to bottom, #7289da, #5865f2);
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Cinzel Decorative', cursive;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #4e5dd5;
+}
+
+.discord-button::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.3s;
+}
+
+.discord-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    background: linear-gradient(to bottom, #7e97f5, #6270f7);
+}
+
+.discord-button:hover::before {
+    opacity: 0.8;
+    transform: scale(1);
+}
+
+.discord-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.discord-button svg {
+    width: 24px;
+    height: 18px;
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .discord-button {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+    
+    .discord-button svg {
+        width: 20px;
+        height: 15px;
+    }
+    
+    .discord-container {
+        margin-top: -30px;
+    }
+}
+
 /* Effets Holographiques - Inspirés de pokemon-cards-css */
 
 /* Effets d'animation supplémentaires au survol */
