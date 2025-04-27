@@ -3,16 +3,19 @@ const exampleCardData = {
   "id": "d9fed5cd-6da8-4a65-b5cc-8a7fe6252579",
   "name": "Confused Imp",
   "manaCost": 1,
+  "subManaCost": "None",
   "attack": 1,
   "health": 2,
-  "type": "dark",
+  "class": "Imp",
+  "type": "Dark",
   "subtype": "None",
+  "status": "None",
+  "effects": "You can draw a card.",
   "rarity": "Common",
   "description": "An imp with no idea where he is... or why.",
-  "flavorText": "",
   "createdAt": "2025-04-25T09:39:27.200Z",
   "userId": "anonymous",
-  "imageUrl": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QuqsmHA0HxVOA0zGYCY47dot/user-lh81xnMjRtHKWy8nEkMpDsod/img-fqY0alHvY31ZopbfOS5Gw8Zv.png?st=2025-04-25T21%3A11%3A49Z&se=2025-04-25T23%3A11%3A49Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-25T11%3A15%3A38Z&ske=2025-04-26T11%3A15%3A38Z&sks=b&skv=2024-08-04&sig=jV8yo63BydVlHrQ4vac5w8Fs75KZtSyg%2Bk5pV5HYYic%3D"
+  "imageUrl": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-QuqsmHA0HxVOA0zGYCY47dot/user-lh81xnMjRtHKWy8nEkMpDsod/img-M9QTIKByXsrZqnOhKMNgS5cj.png?st=2025-04-25T21%3A33%3A05Z&se=2025-04-25T23%3A33%3A05Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-25T04%3A25%3A45Z&ske=2025-04-26T04%3A25%3A45Z&sks=b&skv=2024-08-04&sig=73rjDqHwng6LptNjVd2eUSueK/7r2wMIHqVF%2Btxk7Kk%3D"
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -71,7 +74,19 @@ document.addEventListener('DOMContentLoaded', () => {
             healthElement.textContent = cardData.health;
         }
         
-        console.log("Image d'arrière-plan, nom et statistiques chargés depuis les données: ", cardData.name);
+        // Afficher les effets de la carte
+        const effectsContainer = document.getElementById('card-effects');
+        if (effectsContainer && cardData.effects) {
+            effectsContainer.textContent = cardData.effects;
+        }
+        
+        // Afficher la description de la carte
+        const descriptionContainer = document.getElementById('card-description');
+        if (descriptionContainer && cardData.description) {
+            descriptionContainer.textContent = cardData.description;
+        }
+        
+        console.log("Image d'arrière-plan, nom, statistiques et description chargés depuis les données: ", cardData.name);
     }
     
     // Charger l'image d'arrière-plan depuis les données d'exemple
@@ -266,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             rectoCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
                             
                             // Réinitialiser l'opacité des effets
-                            document.querySelectorAll('#recto-card .holo-overlay, #recto-card .sparkle-overlay').forEach(effect => {
+                            document.querySelectorAll('#recto-cmard .holo-overlay, #recto-card .sparkle-overlay').forEach(effect => {
                                 effect.style.opacity = '0.2';
                             });
                             console.log('Carte recto inactive - effets holographiques désactivés');
