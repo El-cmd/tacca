@@ -293,7 +293,7 @@ body {
 /* Media query pour les téléphones */
 @media (max-width: 576px) {
     .logo {
-        max-width: 180px;
+        max-width: 160px;
     }
 }
 
@@ -344,6 +344,15 @@ h1 {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .card-effects {
+        font-size: 20px;
+        padding: 5px;
+        bottom: 22%;
+    }
+}
+
 /* Style pour la description de la carte */
 .card-description {
     position: absolute;
@@ -358,6 +367,15 @@ h1 {
     padding: 10px;
     z-index: 5;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .card-description {
+        font-size: 9px;
+        padding: 5px;
+        bottom: 12%;
+    }
 }
 
 /* Conteneur pour le champ de saisie */
@@ -594,6 +612,17 @@ button:hover::before {
     overflow: hidden;
 }
 
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .card-background-container {
+        top: 7%;
+        left: 10.8%;
+        width: 78.5%;
+        height: 48%;
+        border-radius: 8px;
+    }
+}
+
 /* Image d'arrière-plan */
 .card-background-image {
     width: 100%;
@@ -629,6 +658,17 @@ button:hover::before {
     transform: translateY(-50%);
 }
 
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .card-name {
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+    }
+    .card-name-container {
+        top: 12%;
+    }
+}
+
 /* Style pour l'attaque */
 .card-attack {
     position: absolute;
@@ -644,6 +684,15 @@ button:hover::before {
     -webkit-text-stroke: 1px black; /* Bordure noire pour les navigateurs webkit */
     z-index: 3;
     text-align: center;
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .card-attack {
+        font-size: 1.5rem;
+        top: 6%;
+        left: 9.6%;
+    }
 }
 
 /* Style pour la santé */
@@ -663,6 +712,15 @@ button:hover::before {
     text-align: center;
 }
 
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .card-health {
+        font-size: 1.5rem;
+        top: 6%;
+        right: 10.8%;
+    }
+}
+
 /* Container de l'image */
 .card-image-container {
     position: relative;
@@ -672,6 +730,13 @@ button:hover::before {
     height: 100%;
     border-radius: 12px;
     z-index: 2;
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .card-image-container {
+        border-radius: 8px;
+    }
 }
 
 /* Base card image */
@@ -756,6 +821,14 @@ button:hover::before {
     transition: opacity 0.3s;
 }
 
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .sparkle-overlay {
+        background-size: 120% 120%; /* Taille légèrement réduite pour mobile */
+        opacity: 0.2; /* Légèrement plus visible sur mobile */
+    }
+}
+
 /* Animation pour les étincelles scintillantes */
 @keyframes sparkle {
     0% { background-position: 0% 0%; opacity: 0.2; } /* Position initiale */
@@ -799,4 +872,26 @@ button:hover::before {
 
 .card-frame.active .border-glow {
     opacity: 0.7; /* Augmenté pour plus d'intensité */
+}
+
+/* Media query pour les téléphones - effets adaptés */
+@media (max-width: 576px) {
+    .card-frame.active .holo-overlay {
+        opacity: 0.7;
+        animation-duration: 2.5s;
+    }
+
+    .card-frame.active .cosmos-overlay {
+        opacity: 0.5;
+        animation-duration: 5s;
+    }
+
+    .card-frame.active .sparkle-overlay {
+        opacity: 0.4;
+        animation-duration: 3.5s;
+    }
+
+    .card-frame.active .border-glow {
+        opacity: 0.6;
+    }
 }
