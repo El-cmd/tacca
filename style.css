@@ -19,6 +19,15 @@ body {
     overflow: hidden;
 }
 
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    body {
+        overflow-y: auto; /* Permet le défilement sur mobile */
+        height: auto;
+        min-height: 100vh;
+    }
+}
+
 /* Conteneur principal pour l'ensemble de la page */
 .main-container {
     display: flex;
@@ -28,6 +37,34 @@ body {
     width: 100%;
     height: 100vh;
     padding: 0 5%;
+    /* Sur mobile, on réorganise en colonne */
+    flex-direction: row;
+}
+
+/* Media query pour les écrans de taille moyenne */
+@media (max-width: 992px) {
+    .main-container {
+        flex-direction: column;
+        justify-content: center;
+        padding: 20px;
+        overflow-y: auto;
+        height: auto;
+        min-height: 100vh;
+    }
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    body {
+        overflow: auto;
+    }
+    .main-container {
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 10px;
+        height: auto;
+        min-height: 100vh;
+    }
 }
 
 /* Conteneur pour les cartes */
@@ -40,6 +77,24 @@ body {
     position: relative;
     margin-left: 5%;
     perspective: 1000px; /* Ajoute une perspective pour l'effet 3D */
+}
+
+/* Media query pour les écrans de taille moyenne */
+@media (max-width: 992px) {
+    .cards-container {
+        width: 80%;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .cards-container {
+        width: 90%;
+        margin-left: 0;
+        height: auto;
+    }
 }
 
 /* Formulaire pour saisir le nom de la carte (conteneur principal gauche) */
@@ -61,6 +116,28 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+/* Media query pour les écrans de taille moyenne */
+@media (max-width: 992px) {
+    .card-form {
+        width: 80%;
+        min-width: 300px;
+        height: auto;
+        min-height: 300px;
+        padding: 2rem 1.5rem;
+        margin-bottom: 20px;
+    }
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .card-form {
+        width: 90%;
+        min-width: 0;
+        padding: 2rem 1rem;
+        min-height: 250px;
+    }
 }
 
 /* Style de base pour les cartes */
@@ -88,6 +165,13 @@ body {
     transform-style: preserve-3d;
     transition: transform 0.8s ease;
     backface-visibility: hidden; /* Cache la face arrière pendant l'animation */
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .card-frame {
+        max-width: 280px; /* Taille réduite pour mobile */
+    }
 }
 
 /* Animation de retournement simplifiée */
@@ -176,6 +260,13 @@ body {
     z-index: 10; /* S'assure qu'il reste au-dessus des autres éléments */
 }
 
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .logo-container {
+        top: -30px;
+    }
+}
+
 @keyframes flottement {
     0% {
         transform: translateY(0);
@@ -193,6 +284,13 @@ body {
     max-width: 250px;
     height: auto;
     animation: flottement 3s ease-in-out infinite; /* Animation perpétuelle de flottement */
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .logo {
+        max-width: 180px;
+    }
 }
 
 /* Style du titre principal avec police médiévale */
@@ -213,6 +311,17 @@ h1 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Ombre pour améliorer la lisibilité */
     letter-spacing: 0.5px;
     transform: scale(1, 1.05); /* Légère transformation pour un effet d'étirement vertical */
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.2rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        padding-left: 5px;
+        margin-left: 0;
+    }
 }
 
 /* Style pour les effets de la carte */
@@ -256,6 +365,13 @@ h1 {
     margin-left: auto;
     margin-right: auto;
     filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2)); /* Ombre portée légère */
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .input-container {
+        width: 90%;
+    }
 }
 
 input {
@@ -311,6 +427,15 @@ button {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    button {
+        width: 70%;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
 button:hover {
     background: linear-gradient(to bottom, #c98a1a, #8d5106);
     transform: translateY(-2px);
@@ -360,6 +485,15 @@ button:hover::before {
     z-index: 100;
 }
 
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .social-media {
+        bottom: 10px;
+        left: 10px;
+        gap: 10px;
+    }
+}
+
 .social-icon {
     width: 40px;
     height: 40px;
@@ -371,6 +505,19 @@ button:hover::before {
     color: #e2c799;
     transition: all 0.3s ease;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 15px rgba(150, 100, 50, 0.2);
+}
+
+/* Media query pour les téléphones */
+@media (max-width: 576px) {
+    .social-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .social-icon svg {
+        width: 18px;
+        height: 18px;
+    }
 }
 
 .social-icon:hover {
