@@ -59,8 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Afficher les effets de la carte
         const effectsContainer = document.getElementById('card-effects');
-        if (effectsContainer && cardData.effects) {
+        if (effectsContainer && cardData.effects && cardData.effects !== 'None') {
             effectsContainer.textContent = cardData.effects;
+        } else if (effectsContainer) {
+            // Si effects vaut 'None' ou n'existe pas, on n'affiche rien
+            effectsContainer.textContent = '';
         }
         
         // Afficher la description de la carte
@@ -117,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 200);
 
     // Fonction pour envoyer une requête POST à l'API et récupérer les données de la carte
-    async function fetchCardData(cardName) {
+    async function fetchCardData(message) {
         try {
             // URL de l'API
             const apiUrl = 'https://n8n-jrc4.onrender.com/webhook/api/chatcard';
@@ -128,8 +131,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ cardName: cardName })
+                body: JSON.stringify({ message: message })
             };
+            
+            // Affichage des données envoyées dans la console
+            console.log('Données envoyées à l\'API:', { message });
+            console.log('Corps de la requête JSON:', requestData.body);
             
             // Affichage d'un message de chargement
             resultContainer.textContent = 'Génération de la carte en cours...';
@@ -171,6 +178,13 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleSubmit() {
         const text = userInput.value.trim();
         
+        // Débogage: Affiche l'entrée utilisateur avant traitement
+        console.log('===== DÉBOGAGE INPUT =====');
+        console.log('Texte saisi par l\'utilisateur:', text);
+        console.log('Type de donnée:', typeof text);
+        console.log('Longueur du texte:', text.length);
+        console.log('==========================');
+        
         // Vérification que rectoCard existe
         if (!rectoCard) {
             console.error("L'élément #recto-card n'a pas été trouvé dans le DOM");
@@ -178,6 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (text) {
+            // Débogage: Affiche ce qui sera envoyé à l'API
+            console.log('Donnée qui sera envoyée à fetchCardData:', text);
+            
             // Récupération des données de la carte depuis l'API
             const cardData = await fetchCardData(text);
             
