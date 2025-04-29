@@ -303,9 +303,9 @@ h1 {
     margin-bottom: 1.5rem;
     padding-left: 15px;
     color: rgba(73, 44, 3, 0.95); /* Brun foncé transparent */
-    font-family: 'Cinzel Decorative', cursive; /* Police médiévale décorative */
+    font-family: 'MedievalSharp', cursive; /* Police médiévale décorative */
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     position: relative;
     z-index: 2;
     width: 100%;
@@ -554,31 +554,36 @@ button:hover::before {
 
 /* Styles pour le bouton Discord */
 .discord-container {
-    margin-top: -40px;
-    width: 100%;
+    position: fixed; /* Position fixe par rapport à la fenêtre */
+    top: 20px; /* Marge du haut */
+    left: 20px; /* Marge de gauche */
+    z-index: 100; /* S'assure qu'il reste au-dessus de tous les autres éléments */
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Empile les éléments verticalement */
+    align-items: flex-start; /* Aligne les éléments à gauche */
+    gap: 5px; /* Espace entre le bouton et le statut */
 }
 
 .discord-button {
     display: flex;
-    align-items: left;
+    align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
     background: linear-gradient(to bottom, #7289da, #5865f2);
     color: #fff;
     text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 6px 12px;
+    border-radius: 6px;
     font-family: 'Cinzel Decorative', cursive;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     transition: all 0.3s ease;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     position: relative;
     overflow: hidden;
     border: 1px solid #4e5dd5;
+    max-width: 180px;
 }
 
 .discord-button::before {
@@ -611,41 +616,68 @@ button:hover::before {
 }
 
 .discord-button svg {
-    width: 24px;
-    height: 18px;
+    width: 18px;
+    height: 14px;
 }
 
 /* Media query pour les téléphones */
 @media (max-width: 576px) {
     .discord-button {
-        padding: 6px 12px;
-        font-size: 0.75rem;
+        padding: 3px 6px;
+        font-size: 0.6rem;
+        max-width: 110px;
     }
     
     .discord-button svg {
-        width: 18px;
-        height: 14px;
+        width: 12px;
+        height: 10px;
+        margin-right: -2px;
+    }
+    
+    .discord-button span {
+        font-size: 0.55rem;
     }
     
     .discord-container {
-        margin-top: -40px;
+        top: 5px; /* Réduit davantage la marge du haut sur mobile */
+        left: 5px; /* Réduit davantage la marge de gauche sur mobile */
+        max-width: 110px;
+    }
+    
+    .auth-status {
+        font-size: 8px;
+        padding: 2px 4px;
+        max-width: 110px;
     }
 }
 
 /* Media query pour les très petits écrans */
 @media (max-width: 380px) {
     .discord-button {
-        padding: 5px 10px;
-        font-size: 0.7rem;
+        padding: 4px 8px;
+        font-size: 0.65rem;
+        max-width: 120px;
     }
     
     .discord-button svg {
-        width: 16px;
-        height: 12px;
+        width: 14px;
+        height: 10px;
     }
     
     .discord-button span {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
+    }
+    
+    .discord-container {
+        top: 5px;
+        left: 5px;
+        max-width: 120px;
+    }
+    
+    .auth-status {
+        font-size: 9px;
+        padding: 2px 5px;
+        max-width: 120px;
     }
 }
 
