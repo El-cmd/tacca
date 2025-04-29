@@ -356,13 +356,13 @@ h1 {
 /* Style pour la description de la carte */
 .card-description {
     position: absolute;
-    bottom: 10%;
+    bottom: 4%;
     left: 0;
     width: 100%;
     text-align: center;
     font-family: 'MedievalSharp', cursive;
     color: #e0e0e0;
-    font-size: 10px;
+    font-size: 13px;
     font-style: italic;
     padding: 10px;
     z-index: 5;
@@ -372,9 +372,9 @@ h1 {
 /* Media query pour les téléphones */
 @media (max-width: 576px) {
     .card-description {
-        font-size: 9px;
+        font-size: 12px;
         padding: 5px;
-        bottom: 12%;
+        bottom: 5%;
     }
 }
 
@@ -464,6 +464,21 @@ button {
 button:hover {
     background: linear-gradient(to bottom, #c98a1a, #8d5106);
     transform: translateY(-2px);
+}
+
+button:disabled, button.disabled {
+    background: linear-gradient(to bottom, #9a8061, #6a5a47);
+    color: #d0c0a0;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+button:disabled:hover, button.disabled:hover {
+    background: linear-gradient(to bottom, #9a8061, #6a5a47);
+    transform: none;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
 }
 
@@ -722,6 +737,86 @@ button:hover::before {
     .menu-carte-text {
         display: none;
     }
+}
+
+/* Animation de chargement */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loader {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    border-top-color: #9932cc;  /* violet foncé */
+    border-bottom-color: #00bfff; /* bleu ciel */
+    animation: spin 2s linear infinite;
+    box-shadow: 0 0 15px rgba(150, 100, 200, 0.7);
+    position: relative;
+}
+
+.loader:before, .loader:after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 5px solid transparent;
+}
+
+.loader:before {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-top-color: #ff8c00;  /* orange */
+    border-bottom-color: #32cd32; /* vert */
+    animation: spin 3s linear infinite;
+}
+
+.loader:after {
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border-top-color: #ff69b4;  /* rose */
+    border-bottom-color: #ffd700; /* or */
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-text {
+    position: absolute;
+    bottom: -40px;
+    color: #fff;
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.2rem;
+    text-shadow: 0 0 10px rgba(150, 100, 200, 0.8);
+    letter-spacing: 2px;
 }
 
 /* Media query pour les très petits écrans */

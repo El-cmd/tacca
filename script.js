@@ -1,9 +1,38 @@
 // Variable globale pour stocker les données de la carte obtenues via fetch
 let currentCardData = null;
+let isGenerating = false; // Variable pour suivre l'état de génération
+let hasGeneratedCard = false; // Variable pour vérifier si une carte a déjà été générée
 
 document.addEventListener('DOMContentLoaded', () => {
     // Définition des fonctions de gestion des effets holographiques au niveau global
     window.handleRectoHoloEffect = null;
+    
+    // Référence à l'overlay de chargement
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
+    // Fonction pour afficher l'animation de chargement
+    function showLoading() {
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('active');
+        }
+        // Désactiver le bouton d'envoi pendant le chargement
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+        }
+    }
+    
+    // Fonction pour masquer l'animation de chargement
+    function hideLoading() {
+        if (loadingOverlay) {
+            loadingOverlay.classList.remove('active');
+        }
+        // Réactiver le bouton d'envoi après le chargement
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('disabled');
+        }
+    }
     
     // Fonction pour charger l'image d'arrière-plan et le nom depuis les données JSON
     function loadBackgroundImage(cardData) {
@@ -122,6 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fonction pour envoyer une requête POST à l'API et récupérer les données de la carte
     async function fetchCardData(message) {
         try {
+            // Affiche l'animation de chargement
+            showLoading();
+            
             // URL de l'API
             const apiUrl = 'https://n8n-jrc4.onrender.com/webhook/api/chatcard';
             
@@ -138,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Données envoyées à l\'API:', { message });
             console.log('Corps de la requête JSON:', requestData.body);
             
-            // Affichage d'un message de chargement
+            // Affichage d'un message de chargement dans le conteneur de résultat
             resultContainer.textContent = 'Génération de la carte en cours...';
             
             // Envoi de la requête
@@ -152,22 +184,27 @@ document.addEventListener('DOMContentLoaded', () => {
             // Conversion de la réponse en JSON
             const rawData = await response.json();
             
+            // Masquer l'animation de chargement car nous avons reçu les données
+            hideLoading();
+            
+            // Affichage des données brutes dans la console
+            console.log('Données reçues de l\'API (JSON brut):', JSON.stringify(rawData, null, 2));
+            console.log('Données structurées complètes:', rawData);
+            
             // Extraire les données de la carte de la structure de réponse
             // La réponse est un tableau contenant un objet avec une propriété 'cardData'
             let cardData = null;
             if (Array.isArray(rawData) && rawData.length > 0 && rawData[0].cardData) {
                 cardData = rawData[0].cardData;
+                console.log('Données de la carte extraites:', cardData);
             }
-            
-            // Affichage des données brutes dans la console
-            console.log('Données reçues de l\'API (JSON brut):', JSON.stringify(rawData, null, 2));
-            console.log('Données structurées complètes:', rawData);
-            console.log('Données de la carte extraites:', cardData);
             
             // Retourne les données de la carte extraites
             return cardData;
             
         } catch (error) {
+            // Masquer l'animation de chargement en cas d'erreur
+            hideLoading();
             console.error('Erreur lors de la récupération des données:', error);
             resultContainer.textContent = `Erreur: ${error.message}`;
             return null;
@@ -176,6 +213,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fonction pour gérer la soumission du texte et le retournement de la carte
     async function handleSubmit() {
+        // Si génération déjà en cours, ne rien faire
+        if (isGenerating) {
+            console.log('Génération déjà en cours, action ignorée');
+            return;
+        }
+        
+        // Si une carte a déjà été générée, empêcher la génération d'une nouvelle carte
+        if (hasGeneratedCard) {
+            console.log('Une carte a déjà été générée, nouvelle génération non autorisée');
+            resultContainer.textContent = 'Une carte a déjà été générée. Actualiser la page pour générer une nouvelle carte.';
+            return;
+        }
+        
+        // Marquer la génération comme en cours
+        isGenerating = true;
+        
         const text = userInput.value.trim();
         
         // Débogage: Affiche l'entrée utilisateur avant traitement
@@ -195,8 +248,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Débogage: Affiche ce qui sera envoyé à l'API
             console.log('Donnée qui sera envoyée à fetchCardData:', text);
             
-            // Récupération des données de la carte depuis l'API
-            const cardData = await fetchCardData(text);
+            // Récupération des données de la carte depuis l'API avec gestion d'erreur
+            let cardData;
+            try {
+                cardData = await fetchCardData(text);
+            } catch (error) {
+                console.error('Erreur lors de la génération de la carte:', error);
+                resultContainer.textContent = `Erreur: ${error.message}`;
+                isGenerating = false; // Réinitialiser l'état même en cas d'erreur
+                return;
+            }
             
             // Si nous avons reçu des données valides
             if (cardData) {
@@ -216,6 +277,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Charger les données dans la carte
                 loadBackgroundImage(cardData);
+                
+                // Après aération, réinitialiser l'animation de transformation
+                setTimeout(() => {
+                    versoCard.style.transform = 'perspective(1000px) rotateY(0deg)';
+                }, 300);
+                
+                // Marquer qu'une carte a été générée avec succès
+                hasGeneratedCard = true;
+                
+                // Désactiver définitivement le bouton d'envoi
+                submitBtn.disabled = true;
+                submitBtn.classList.add('disabled');
+                submitBtn.title = 'Une carte a déjà été générée. Rafraîchissez la page pour en créer une nouvelle.';
+                
+                // Afficher les détails de la carte dans la console pour le débogage
+                console.log('Carte générée avec succès: ', {
+                    nom: cardData.name,
+                    type: cardData.type,
+                    classe: cardData.class,
+                    attaque: cardData.attack,
+                    santé: cardData.health,
+                    effets: cardData.effects,
+                    rareté: cardData.rarity
+                });
                 
                 // Afficher un message de succès avec les détails
                 resultContainer.textContent = `Carte générée : ${cardData.name || text} (${cardData.type || 'Type inconnu'})`;
@@ -375,6 +460,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Redonner le focus au champ d'entrée
         userInput.focus();
+        
+        // Réinitialiser l'état de génération
+        isGenerating = false;
     }
     
         // Fonction pour gérer les effets holographiques lors du mouvement de la souris sur la carte verso
