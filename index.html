@@ -10,37 +10,23 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .auth-status {
-            font-size: 11px;
+            font-size: 12px;
+            margin-top: 5px;
             font-style: italic;
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 4px 8px;
-            border-radius: 4px;
-            max-width: 180px;
-            text-align: center;
-            backdrop-filter: blur(2px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         .status-connecting {
-            color: #ffbb33;
-            animation: pulse 1.5s infinite;
+            color: #ff9900;
         }
         .status-connected {
-            color: #33ff66;
+            color: #009900;
         }
         .status-error {
-            color: #ff5555;
+            color: #cc0000;
         }
-        /* Style pour l'u00e9tat non connectu00e9 */
+        /* Style pour l'état non connecté */
         .auth-status:not(.status-connecting):not(.status-connected):not(.status-error) {
-            color: #ff3333;
+            color: #ff0000;
             font-weight: bold;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
         }
         .user-profile {
             display: flex;
@@ -99,6 +85,12 @@
                 <div id="userProfile" style="display:none;" class="user-profile">
                     <img id="userAvatar" class="avatar" src="" alt="User Avatar">
                     <span id="userDisplayName" class="username"></span>
+                </div>
+                <div class="menu-carte-container">
+                    <a href="#" id="menuCarteBtn" class="menu-carte-button">
+                        <img src="assets/menucarte.png" alt="Menu Carte" class="menu-carte-icon">
+                    </a>
+                    <span class="menu-carte-text">My Cards</span>
                 </div>
             </div>
         </div>
