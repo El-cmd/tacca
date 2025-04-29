@@ -905,10 +905,10 @@ button:hover::before {
 /* Conteneur pour l'image d'arrière-plan */
 .card-background-container {
     position: absolute;
-    top: 11%; /* Position plus basse pour réduire la taille */
-    left: 15%;
-    width: 70%; /* Largeur réduite */
-    height: 40%; /* Hauteur réduite */
+    top: 8%; /* Position ajustée pour agrandir l'image */
+    left: 12%;
+    width: 76%; /* Largeur augmentée */
+    height: 47%; /* Hauteur augmentée */
     border-radius: 10px;
     z-index: 1; /* En dessous de l'image de la carte */
     overflow: hidden;
@@ -917,10 +917,10 @@ button:hover::before {
 /* Media query pour les téléphones */
 @media (max-width: 576px) {
     .card-background-container {
-        top: 12%;
-        left: 15%;
-        width: 70%;
-        height: 38%;
+        top: 8.5%;
+        left: 12.5%;
+        width: 75%;
+        height: 45%;
         border-radius: 8px;
     }
 }
